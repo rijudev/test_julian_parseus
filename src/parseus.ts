@@ -1,4 +1,4 @@
-import { getMetaKey, getMetaDataKey } from './helpers/utils'
+import { getMetaDataKey } from './helpers/utils'
 import processor from './helpers/processors'
 
 interface IOptions<T> {
