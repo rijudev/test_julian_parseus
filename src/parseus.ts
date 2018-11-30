@@ -1,25 +1,5 @@
-// TODO: move this to Reflect meta data
-// or think another way
-const map = {}
-
-type Type = 'string' | 'number' | 'custom'
-
-interface IOptions {
-  name?: string
-  type: Type
-  parse?: Function
-}
-
-export function Field(options: IOptions) {
-  return (target, key) => {
-    map[key] = { ...options, key, target }
-  }
-}
-
-const parsers = {
-  number: ({ value }) => parseInt(value, 10),
-  string: ({ value }) => `${value}`
-}
+import parsers from './parsers'
+import { METAKEY } from './helpers/constants'
 
 export default function parseus<T>(ctx: T) {
   return {
@@ -30,7 +10,7 @@ export default function parseus<T>(ctx: T) {
       return keys.reduce(
         (acc, key) => {
           const value = ctx[key]
-          const settings = map[key]
+          const settings = keysWithDefaults[`${METAKEY}-${key}`]
           const { type, parse } = settings
           const defaultValue = keysWithDefaults[key]
           const props = { ...settings, value, ctx, defaultValue }
