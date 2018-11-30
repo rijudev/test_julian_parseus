@@ -2,8 +2,8 @@ import parseus, { Field, TNumber, TString, TObject, TArray } from '../src'
 
 function Custom() {
   const type = 'custom'
-  const parse = () => 'soy custom klk'
-  return Field({ type, parse })
+  const parser = () => 'soy custom klk'
+  return Field({ type, parser })
 }
 
 class Creator {
@@ -90,7 +90,15 @@ describe('Parseus', () => {
     songs
   }
 
+  const richard = {
+    ...julian,
+    name: 'richard'
+  }
+
+  const people = [julian, richard]
+
   const person = parseus(julian).to(Person)
+  const personArr = parseus(people).to(Person)
 
   it('Verify Number conversion', () => {
     expect(typeof person.age).toBe('number')
@@ -125,4 +133,7 @@ describe('Parseus', () => {
     expect(typeof person.songs[0].creator.age).toBe('number')
   })
 
+  it('Verify array entry conversion', () => {
+    expect(Array.isArray(personArr)).toBeTruthy()
+  })
 })

@@ -1,3 +1,4 @@
+import { Type, IParser } from '../helpers/interfaces'
 import number from './number'
 import string from './string'
 import object from './object'
@@ -8,4 +9,4 @@ export default {
   string,
   object,
   array
-}
+} as { [key in Type]: IParser }

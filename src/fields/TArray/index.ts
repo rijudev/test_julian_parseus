@@ -1,7 +1,7 @@
 import { Field } from '../Field'
-import { IOptionsNoType } from '../../helpers/interfaces'
+import { IBaseOptions, IClass } from '../../helpers/interfaces'
 
-export function TArray(model, options: IOptionsNoType = {}) {
+export function TArray(model: IClass, options: IBaseOptions = {}) {
   const type = 'array'
   return Field({ ...options, type, model })
 }

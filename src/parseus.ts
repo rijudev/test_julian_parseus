@@ -1,21 +1,24 @@
 import parsers from './parsers'
-import { METAKEY } from './helpers/constants'
+import { getMetaKey } from './helpers/utils'
+import processor from './helpers/processors'
 
 export default function parseus<T>(ctx: T) {
+  const isArray = Array.isArray(ctx)
   return {
     to(model): T {
-      const keysWithDefaults = new model()
-      const keys = Object.keys(keysWithDefaults)
+      const meta = new model()
+      const keys = Object.keys(meta)
+
+      if (isArray) {
+        return (ctx as any).map(item => parseus(item).to(model))
+      }
 
       return keys.reduce(
         (acc, key) => {
-          const value = ctx[key]
-          const settings = keysWithDefaults[`${METAKEY}-${key}`]
-          const { type, parse } = settings
-          const defaultValue = keysWithDefaults[key]
-          const props = { ...settings, value, ctx, defaultValue }
-          const parsed = parse ? parse(props) : parsers[type](props)
-          return { ...(acc as any), [key]: parsed }
+          const metaKey = getMetaKey(key)
+          const entries = { ctx, metaKey, meta }
+          const options = { acc, key, parsers, entries }
+          return processor(options)
         },
         {} as T
       )

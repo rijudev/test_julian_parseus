@@ -1,9 +1,9 @@
-import { METAKEY } from '../../helpers/constants'
+import { getMetaKey } from '../../helpers/utils'
 import { IOptions } from '../../helpers/interfaces'
 
 export function Field(options: IOptions) {
   return (target, key) => {
     const meta = { ...options, key, target }
-    target[`${METAKEY}-${key}`] = meta
+    target[getMetaKey(key)] = meta
   }
 }
