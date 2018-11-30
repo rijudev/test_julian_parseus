@@ -6,6 +6,14 @@ function Custom() {
   return Field({ type, parse })
 }
 
+class Creator {
+  @TString()
+  name?: string = undefined
+
+  @TNumber()
+  age?: number = undefined
+}
+
 class Song {
   @TString()
   name?: string = undefined
@@ -15,6 +23,10 @@ class Song {
 
   @TString()
   albumn?: string = undefined
+
+  // Testing Deep nested object parsing
+  @TObject(Creator)
+  creator?: Creator = undefined
 }
 
 class Person {
@@ -64,7 +76,8 @@ class Person {
 }
 
 describe('Parseus', () => {
-  const song = { name: 'Somewhere inside', rating: '35' }
+  const creator = { name: 'creator1', age: '22' }
+  const song = { name: 'Somewhere inside', rating: '35', creator }
   const songs = [song, song]
   const julian = {
     name: 'julian',
@@ -106,5 +119,9 @@ describe('Parseus', () => {
     expect(Array.isArray(person.songs)).toBeTruthy()
     expect(person.songs.length).toBe(2)
     expect(typeof person.songs[0].rating).toBe('number')
+  })
+
+  it('Verify nested object within array conversion', () => {
+    expect(typeof person.songs[0].creator.age).toBe('number')
   })
 })
