@@ -124,4 +124,5 @@ describe('Parseus', () => {
   it('Verify nested object within array conversion', () => {
     expect(typeof person.songs[0].creator.age).toBe('number')
   })
+
 })
