@@ -1,9 +1,20 @@
-import parseus, { Field, TNumber, TString } from '../src'
+import parseus, { Field, TNumber, TString, TObject } from '../src'
 
 function Custom() {
   const type = 'custom'
   const parse = () => 'soy custom klk'
   return Field({ type, parse })
+}
+
+class Song {
+  @TString()
+  name?: string = undefined
+
+  @TNumber()
+  rating?: number = undefined
+
+  @TString()
+  albumn?: string = undefined
 }
 
 class Person {
@@ -24,7 +35,7 @@ class Person {
   // if it is not assigned
   // it doesn't exists
   @TString()
-  numberToString = undefined
+  numberToString?: any = undefined
 
   /**
    * Quick Type usages (Sugar syntax)
@@ -36,7 +47,7 @@ class Person {
    * Use default value
    */
   @TNumber()
-  default1 = '23'
+  default1: string | null = '23'
 
   /**
    * If people wants to handle custom types
@@ -44,6 +55,9 @@ class Person {
    */
   @Custom()
   custom = 'custom here'
+
+  @TObject(Song)
+  song?: Song = undefined
 }
 
 describe('Parseus', () => {
@@ -53,7 +67,8 @@ describe('Parseus', () => {
     timelapse: '55',
     default1: null,
     numberToString: 33,
-    custom: 'nadaquever'
+    custom: 'nadaquever',
+    song: { name: 'Somewhere inside', rating: '35' }
   }
 
   const person = parseus(julian).to(Person)
@@ -73,5 +88,10 @@ describe('Parseus', () => {
 
   it('Verify default conversion', () => {
     expect(person.default1).toBe(23)
+  })
+
+  it('Verify nested object conversion', () => {
+    expect(person.song).toBeDefined()
+    expect(typeof person.song.rating).toBe('number')
   })
 })
