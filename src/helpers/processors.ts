@@ -6,7 +6,7 @@ function processor<T>(options: IArgsProcessor<T>): Processed<T> {
 
   const value = ctx[key]
   const config = meta[key]
-  const { type, parser } = config
+  const { parser } = config
 
   const props = { ...config, value, ctx }
   const parsed = parser && parser(props)

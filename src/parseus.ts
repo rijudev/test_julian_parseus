@@ -1,5 +1,5 @@
-import { getMetaDataKey } from './helpers/utils'
 import processor from './helpers/processors'
+import { getMetaDataKey } from './helpers/utils'
 
 interface IOptions<T> {
   model: any
