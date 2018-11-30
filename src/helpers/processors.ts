@@ -1,4 +1,4 @@
-import { IArgsProcessor, Processed, Type } from './interfaces'
+import { IArgsProcessor, Processed } from './interfaces'
 
 function processor<T>(options: IArgsProcessor<T>): Processed<T> {
   const { acc, key, entries } = options
