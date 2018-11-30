@@ -1,14 +1,15 @@
 import { IArgsProcessor, Processed, Type } from './interfaces'
 
 function processor<T>(options: IArgsProcessor<T>): Processed<T> {
-  const { acc, key, parsers, entries } = options
-  const { ctx, meta, metaKey } = entries
+  const { acc, key, entries } = options
+  const { ctx, meta } = entries
+
   const value = ctx[key]
-  const config = meta[metaKey]
-  const defaultValue = meta[key] as any
+  const config = meta[key]
   const { type, parser } = config
-  const props = { ...config, value, ctx, defaultValue }
-  const parsed = parser ? parser(props) : parsers[type as Type](props)
+
+  const props = { ...config, value, ctx }
+  const parsed = parser && parser(props)
   return { ...(acc as any), [key]: parsed }
 }
 

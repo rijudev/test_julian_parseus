@@ -1,7 +1,7 @@
-import { Field } from '../Field'
+import { Field } from '../field'
 import { IBaseOptions, IClass } from '../../helpers/interfaces'
 
-export function TObject(model: IClass, options: IBaseOptions = {}) {
+export function PObject(model: IClass, options: IBaseOptions = {}) {
   const type = 'object'
   return Field({ ...options, type, model })
 }

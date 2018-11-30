@@ -1,5 +1,4 @@
-import parsers from './parsers'
-import { getMetaKey } from './helpers/utils'
+import { getMetaKey, getMetaDataKey } from './helpers/utils'
 import processor from './helpers/processors'
 
 interface IOptions<T> {
@@ -9,28 +8,40 @@ interface IOptions<T> {
 
 function process<T>(options: IOptions<T>): T {
   const { model, ctx } = options
-  const isArray = Array.isArray(ctx)
-  const meta = new model()
+  const metaKey = getMetaDataKey()
+  const meta = Reflect.get(new model(), metaKey)
   const keys = Object.keys(meta)
 
-  if (isArray) {
+  if (Array.isArray(ctx)) {
     return (ctx as any).map(item => parseus(item).to(model))
   }
 
   return keys.reduce(
     (acc, key) => {
-      const metaKey = getMetaKey(key)
-      const entries = { ctx, metaKey, meta }
-      const options = { acc, key, parsers, entries }
+      const entries = { ctx, meta }
+      const options = { acc, key, entries }
       return processor(options)
     },
     {} as T
   )
 }
 
-export default function parseus<T>(ctx: T) {
+export class Parseus {
+  static to<T>(data: T) {
+    return parseus(this).to(data)
+  }
+
+  static from<T>(data: T) {
+    return parseus(this).from(data)
+  }
+}
+
+export default function parseus(model) {
   return {
-    to(model): T {
+    to<T>(ctx: T): T {
+      return process({ model, ctx })
+    },
+    from<T>(ctx: T): T {
       return process({ model, ctx })
     }
   }

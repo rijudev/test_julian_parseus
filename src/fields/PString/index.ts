@@ -1,7 +1,7 @@
-import { Field } from '../Field'
+import { Field } from '../field'
 import { IBaseOptions } from '../../helpers/interfaces'
 
-export function TString(options: IBaseOptions = {}) {
+export function PString(options: IBaseOptions = {}) {
   const type = 'string'
   return Field({ ...options, type })
 }
