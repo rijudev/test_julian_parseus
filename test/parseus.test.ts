@@ -1,4 +1,4 @@
-import parseus, { Field, TNumber, TString, TObject } from '../src'
+import parseus, { Field, TNumber, TString, TObject, TArray } from '../src'
 
 function Custom() {
   const type = 'custom'
@@ -19,7 +19,7 @@ class Song {
 
 class Person {
   /**
-   * Directly usage
+   * Direct usage
    */
   @Field({ type: 'number' })
   age = '123'
@@ -58,9 +58,14 @@ class Person {
 
   @TObject(Song)
   song?: Song = undefined
+
+  @TArray(Song)
+  songs?: Song[] = undefined
 }
 
 describe('Parseus', () => {
+  const song = { name: 'Somewhere inside', rating: '35' }
+  const songs = [song, song]
   const julian = {
     name: 'julian',
     age: '26',
@@ -68,7 +73,8 @@ describe('Parseus', () => {
     default1: null,
     numberToString: 33,
     custom: 'nadaquever',
-    song: { name: 'Somewhere inside', rating: '35' }
+    song,
+    songs
   }
 
   const person = parseus(julian).to(Person)
@@ -90,8 +96,15 @@ describe('Parseus', () => {
     expect(person.default1).toBe(23)
   })
 
-  it('Verify nested object conversion', () => {
+  it('Verify object conversion', () => {
     expect(person.song).toBeDefined()
     expect(typeof person.song.rating).toBe('number')
+  })
+
+  it('Verify array conversion', () => {
+    expect(person.songs).toBeDefined()
+    expect(Array.isArray(person.songs)).toBeTruthy()
+    expect(person.songs.length).toBe(2)
+    expect(typeof person.songs[0].rating).toBe('number')
   })
 })
