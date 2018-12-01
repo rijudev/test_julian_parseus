@@ -9,6 +9,7 @@ export interface IBaseOptions {
   format?: string
   parser?: IParser
   maxLength?: number
+  readOnly?: boolean
   defaultValue?: any
 }
 export interface IOptions extends IBaseOptions {
@@ -17,7 +18,8 @@ export interface IOptions extends IBaseOptions {
 
 export interface IParserOptions extends IBaseOptions {
   value?: any
-  defaultValue?: any
+  key: string
+  target: any
 }
 
 export interface IParser {
