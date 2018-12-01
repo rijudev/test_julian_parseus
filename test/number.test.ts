@@ -1,41 +1,35 @@
-import Parser, { PNumber, Field, Parseus } from '../src'
+import Parser, { Field } from '../src'
 
 class Person {
-  @PNumber()
+  @Field({ type: 'number' })
   age?: number
 
-  @Field({ type: 'number', defaultValue: '44' })
-  age3?: number
-
-  @PNumber()
-  age2?: number = 4
-}
-
-class Person2 extends Parseus {
-  @PNumber()
-  age?: number
-
-  @Field({ type: 'number', defaultValue: '44' })
-  age3?: number
+  @Field({ type: 'number', readOnly: true })
+  sibilings?: string
 }
 
 const data = {
-  age: '25',
-  age3: undefined
+  age: '26',
+  sibilings: '22'
 }
 
-describe(`Parseus - TNumber / type: 'number' :: Direct usage`, () => {
-  const result = Parser(Person).to(data)
+describe(`Parseus[type=number]`, () => {
   test('should convert string number to number', () => {
-    expect(result.age).toBe(25)
-    expect(result.age3).toBe(44)
+    const result = Parser(Person).to(data)
+    expect(typeof result.age).toBe('number')
   })
-})
 
-describe(`Parseus - TNumber / type: 'number' :: Extending Parseus`, () => {
-  const result = Person2.to(data)
-  test('should convert string number to number', () => {
-    expect(result.age).toBe(25)
-    expect(result.age3).toBe(44)
+  describe(`readOnly`, () => {
+    const result = Parser(Person).to(data)
+    test('should convert to number and not allow mutation', () => {
+      expect(typeof result.sibilings).toBe('number')
+      result.sibilings = '22'
+      expect(typeof result.sibilings).toBe('number')
+    })
+
+    test('should allow mutation in not readOnly fields', () => {
+      result.age = '2'
+      expect(typeof result.age).not.toBe('number')
+    })
   })
 })

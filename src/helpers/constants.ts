@@ -1,1 +1,1 @@
-export const METAKEY = '__meta__'
+export const METADATAKEY = '__metadata__'
