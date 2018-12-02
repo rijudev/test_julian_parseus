@@ -21,8 +21,8 @@ export interface IParserOptions extends IOptions {
   target: any
 }
 
-export interface IParser {
-  (options: IParserOptions): any
+export interface IParserClass {
+  run(): IParserOptions
 }
 
 export interface IArgsProcessor<T> {

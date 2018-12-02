@@ -1,14 +1,20 @@
-import { IParserOptions } from '../../helpers/interfaces'
-import { unmatchType } from '../../helpers/utils'
+import { IParserOptions, IParserClass } from '../../helpers/interfaces'
+import { Parser } from './base'
+import { hasDefinedValue } from '../../helpers/utils'
 
-const TYPE = 'string'
+export default class StringParser extends Parser implements IParserClass {
+  static TYPE = 'string'
 
-export default function(options: IParserOptions): IParserOptions {
-  const { type, value: inValue } = options
-  if (unmatchType(type, TYPE)) return options
-  if (typeof inValue === TYPE) return options
+  constructor(options: IParserOptions) {
+    super(options)
+  }
 
-  const value = `${inValue}`
+  run() {
+    if (super.skip(StringParser.TYPE, true)) return this.options
 
-  return Object.assign(options, { value })
+    const { value: inValue } = this.options
+    const value = hasDefinedValue(inValue) ? `${inValue}` : inValue
+
+    return { ...this.options, value }
+  }
 }

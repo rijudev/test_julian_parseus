@@ -5,18 +5,30 @@ class Person {
   age?: number
 
   @Field({ type: 'number', readOnly: true })
-  sibilings?: string
+  sibilings?: number
+
+  @Field({ type: 'number', defaultValue: 23 })
+  default?: number
 }
 
 const data = {
   age: '26',
-  sibilings: '22'
+  sibilings: '22',
+  default: undefined
 }
 
 describe(`Parseus[type=number]`, () => {
   test('should convert string number to number', () => {
     const result = Parser(Person).to(data)
     expect(typeof result.age).toBe('number')
+    expect(result.age).toBe(26)
+  })
+
+  describe(`defaultValue`, () => {
+    const result = Parser(Person).to(data)
+    test('should set default value', () => {
+      expect(result.default).toBe(23)
+    })
   })
 
   describe(`readOnly`, () => {
@@ -25,6 +37,7 @@ describe(`Parseus[type=number]`, () => {
       expect(typeof result.sibilings).toBe('number')
       result.sibilings = '22'
       expect(typeof result.sibilings).toBe('number')
+      expect(result.sibilings).toBe(22)
     })
 
     test('should allow mutation in not readOnly fields', () => {
