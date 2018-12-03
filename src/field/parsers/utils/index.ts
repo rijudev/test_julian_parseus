@@ -58,3 +58,9 @@ export function runAfterHook(opts: IParserOptions): IParserOptions {
 export function getParseusMethod(isFrom?: boolean) {
   return isFrom ? 'from' : 'to'
 }
+
+export function isPrimitive(value: any) {
+  return (
+    (typeof value !== 'object' && typeof value !== 'function') || value === null
+  )
+}
