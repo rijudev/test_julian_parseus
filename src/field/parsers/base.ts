@@ -12,7 +12,7 @@ export default function(opts: IParserOptions): IBaseParserReturn {
     Object.assign(draft, { value: opts.defaultValue })
   }
 
-  const targetKey = opts.isFrom ? opts.name || opts.key : opts.key || opts.name
+  const targetKey = opts.isFrom ? opts.name || opts.key : opts.key
   Object.assign(draft, { targetKey })
 
   return draft
