@@ -2,7 +2,7 @@
 
 A starter project that makes creating a TypeScript library extremely easy.
 
-![](https://imgur.com/a/ygC6uY7)
+[Imgur](https://i.imgur.com/77NTcLy.jpg)
 
 ### Usage
 
