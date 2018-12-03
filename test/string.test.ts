@@ -1,13 +1,13 @@
 import Parser, { Field } from '../src'
 
 class Person {
-  @Field({ type: 'string' })
+  @Field()
   age?: string
 
-  @Field({ type: 'string', readOnly: true })
+  @Field({ readOnly: true })
   sibilings?: string
 
-  @Field({ type: 'string', defaultValue: '23' })
+  @Field({ defaultValue: '23' })
   default?: string
 }
 

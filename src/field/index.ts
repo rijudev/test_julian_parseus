@@ -1,8 +1,10 @@
 import { IOptions } from '../helpers/interfaces'
-import { setKeyMetadata } from '../helpers/metadata'
+import { mergeOptionsWithDesign } from '../helpers/utils'
+import { setKeyMetadata, getMetadataDesign } from '../helpers/metadata'
 
-export default function(options: IOptions) {
+export default function(options: IOptions = {}) {
   return (target, key) => {
-    setKeyMetadata(target, key, options)
+    const designMetadata: any = getMetadataDesign(target, key)
+    setKeyMetadata(target, key, mergeOptionsWithDesign(options, designMetadata))
   }
 }

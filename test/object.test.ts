@@ -9,8 +9,8 @@ class SubPerson {
 }
 
 class Person {
-  @Field({ type: 'object', model: SubPerson })
-  person?: { name: string; age: number }
+  @Field({ type: 'object' })
+  person?: SubPerson 
 
   @Field({ type: 'object', defaultValue: { name: 'julian' }, model: SubPerson })
   person2?: { name: string; age: number }

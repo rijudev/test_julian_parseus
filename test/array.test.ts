@@ -9,15 +9,15 @@ class SubPerson {
 }
 
 class Person {
-  @Field({ type: 'array', model: SubPerson })
-  people?: { name: string; age: number }[]
+  @Field({ model: SubPerson })
+  people?: SubPerson[]
 
   @Field({
     type: 'array',
     defaultValue: [{ name: 'julian' }],
     model: SubPerson
   })
-  person2?: { name: string; age: number }[]
+  person2?: SubPerson[]
 
   @Field({ type: 'array', model: SubPerson, readOnly: true })
   person3?: { name: string; age: number }[]

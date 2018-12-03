@@ -1,23 +1,23 @@
-import { IParserOptions, IParserClass } from '../../helpers/interfaces'
-import { hasDefinedValue } from '../../helpers/utils'
 import { Parser } from './base'
 import Parseus from '../../parseus'
+import { hasDefinedValue, getParseusMethod } from '../../helpers/utils'
 
-export default class ObjectParser extends Parser implements IParserClass {
+export default class Parse extends Parser {
   static TYPE = 'object'
 
-  constructor(options: IParserOptions) {
+  constructor(options) {
     super(options)
   }
 
   run() {
-    if (super.skip(ObjectParser.TYPE)) return this.options
-
-    const { value: inValue, model } = this.options
+    const { value: inValue, model, isFrom } = this.options
+    const call = getParseusMethod(isFrom)
     const value = hasDefinedValue(inValue)
-      ? Parseus(model).to(inValue)
+      ? Parseus(model)[call](inValue)
       : inValue
 
-    return { ...this.options, value }
+    this.options.value = value
+
+    return this.options
   }
 }

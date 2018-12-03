@@ -1,25 +1,28 @@
 import processor from './processor'
 import { IArgsProcess } from './helpers/interfaces'
-import { getMetadataKeys } from './helpers/metadata'
+import { getMetadataKeys, getMetadata } from './helpers/metadata'
 
-function process<T>(options: IArgsProcess<T>): T {
-  const { ctx } = options
-  const target = new options.model()
-  const keys = getMetadataKeys(target)
+function process<T>(options: IArgsProcess<T>, isFrom = false): T {
+  const { ctx, keys, metadata, target } = options
 
   return keys.reduce((acc, key) => {
-    const options = { acc, key, ctx, target }
-    return processor(options)
+    return processor({ acc, key, keys, metadata, ctx, target }, isFrom)
   }, target)
 }
 
 export default function parseus(model) {
+  const target = new model()
+  const keys = getMetadataKeys(target)
+  const metadata = getMetadata(target)
+  const options: IArgsProcess<any> = { model, target, metadata, keys } as any
   return {
     to<T>(ctx: T): T {
-      return process({ model, ctx })
+      options.ctx = ctx
+      return process(options)
     },
     from<T>(ctx: T): T {
-      return process({ model, ctx })
+      options.ctx = ctx
+      return process(options, true)
     }
   }
 }

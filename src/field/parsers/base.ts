@@ -1,40 +1,37 @@
-import { IParserOptions } from '../../helpers/interfaces'
+import { IParserOptions, IBaseParserReturn } from '../../helpers/interfaces'
 import {
-  makeReadOnly,
   unmatchType,
+  makeReadOnly,
   hasNotDefinedValue
 } from '../../helpers/utils'
 
-abstract class ToFreeze {
-  constructor(readonly options) {}
-}
-export abstract class Parser extends ToFreeze {
-  constructor(options: IParserOptions) {
-    super(options)
+export abstract class Parser {
+  constructor(protected options: IParserOptions) {}
+
+  run() {
+    return this.options
   }
 
-  skip(typeToValidate: string, withValueType: boolean = false) {
-    const skip = unmatchType(typeToValidate, this.options.type)
+  static matches(instanceType, options: IParserOptions) {
+    return instanceType === options.type
+  }
 
-    if (withValueType) {
-      return skip || typeToValidate === typeof this.options.value
-    }
-
-    return skip
+  valueTypeMatches(instanceType) {
+    return typeof this.options.value === instanceType
   }
 }
 
-export default function(options: IParserOptions): IParserOptions {
-  const { readOnly, target, key, value, defaultValue } = Object.freeze(options)
+export default function(opts: IParserOptions): IBaseParserReturn {
   let changes = {}
+  let targetKey = opts.isFrom ? opts.name || opts.key : opts.key || opts.name
 
-  if (readOnly) {
-    makeReadOnly(target, key, value)
+  if (opts.readOnly) {
+    makeReadOnly(opts.target, opts.key, opts.value)
   }
 
-  if (hasNotDefinedValue(value)) {
-    changes = Object.assign(changes, { value: defaultValue })
+  if (hasNotDefinedValue(opts.value)) {
+    changes = Object.assign(changes, { value: opts.defaultValue })
   }
 
-  return { ...options, ...changes }
+  return Object.assign(opts, Object.assign({ targetKey }, changes))
 }

@@ -1,10 +1,12 @@
-import { getMetadataKey } from './utils'
-import { IOptions } from './interfaces'
-
-const metadataKey = getMetadataKey()
+import { IOptions, IMetadata } from './interfaces'
+import { METADATAKEY, METADATADESIGNKEY } from './constants'
 
 export function getMetadata(target): { [key: string]: IOptions } {
-  return Reflect.get(target, metadataKey) || {}
+  return Reflect.get(target, METADATAKEY) || {}
+}
+
+export function getMetadataDesign(target, key: string): IMetadata {
+  return Reflect.getMetadata(METADATADESIGNKEY, target, key) || {}
 }
 
 export function getKeyMetadata(target, key: string) {
@@ -17,7 +19,7 @@ export function getMetadataKeys(target) {
 
 export function setKeyMetadata(target, key: string, data) {
   const metadata = getMetadata(target)
-  Reflect.defineProperty(target, metadataKey, {
+  Reflect.defineProperty(target, METADATAKEY, {
     configurable: true,
     value: { ...metadata, [key]: data }
   })

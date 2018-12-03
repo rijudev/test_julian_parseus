@@ -1,16 +1,19 @@
-import { IArgsProcessor, Processed } from './helpers/interfaces'
-import { getKeyMetadata } from './helpers/metadata'
 import parser from './field/parsers'
+import { IArgsProcessor, Processed } from './helpers/interfaces'
 
-function processor<T>(options: IArgsProcessor<T>): Processed<T> {
-  const { acc, key, ctx, target } = options
+function processor<T>(options: IArgsProcessor<T>, isFrom?): Processed<T> {
+  const { acc, key, ctx, metadata } = options
 
-  const value = ctx[key]
-  const metadata = getKeyMetadata(target, key)
+  const meta = metadata[key]
+  const value = ctx[meta.name || key]
 
-  acc[key] = parser(
-    Object.assign(options, Object.assign(metadata, { ctx, value }))
+  if (meta.isVirtual && isFrom) return acc
+
+  const { targetKey, value: resultValue } = parser(
+    Object.assign(options, Object.assign(meta, { isFrom, ctx, value }))
   )
+
+  acc[targetKey] = resultValue
 
   return acc
 }

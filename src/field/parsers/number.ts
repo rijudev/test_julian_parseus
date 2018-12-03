@@ -1,16 +1,15 @@
-import { IParserOptions, IParserClass } from '../../helpers/interfaces'
-import { hasDefinedValue } from '../../helpers/utils'
 import { Parser } from './base'
+import { hasDefinedValue } from '../../helpers/utils'
 
-export default class NumberParser extends Parser implements IParserClass {
+export default class Parse extends Parser {
   static TYPE = 'number'
 
-  constructor(options: IParserOptions) {
+  constructor(options) {
     super(options)
   }
 
   run() {
-    if (super.skip(NumberParser.TYPE, true)) return this.options
+    if (super.valueTypeMatches(Parse.TYPE)) return this.options
 
     const { value: inValue } = this.options
     const value = hasDefinedValue(inValue) ? parseInt(inValue, 10) : inValue
