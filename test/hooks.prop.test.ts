@@ -39,7 +39,7 @@ describe(`Parseus[type=number, name=age, beforeHook=from/to]`, () => {
   })
 
   test('should transform with beforeHook from', () => {
-    const result = Parser(Person).from(data)
+    const result: any = Parser(Person).from(data)
     expect(result.age2).toBe(87)
   })
 })

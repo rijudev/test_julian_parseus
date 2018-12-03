@@ -31,14 +31,14 @@ const data: any = {
 
 describe(`Parseus[type=array]`, () => {
   test(`should convert array's properties`, () => {
-    const result = Parser(Person).to(data)
+    const result: any = Parser(Person).to(data)
     expect(Array.isArray(result.people)).toBeTruthy()
     expect(result.people[0].name).toBe('22')
     expect(result.people[0].age).toBe(3)
   })
 
   describe(`defaultValue`, () => {
-    const result = Parser(Person).to(data)
+    const result: any = Parser(Person).to(data)
     test('should set default value', () => {
       expect(result.person2[0].name).toBe('julian')
     })
@@ -46,7 +46,7 @@ describe(`Parseus[type=array]`, () => {
 
   describe(`readOnly`, () => {
     test(`should convert to array's properties and not allow mutation`, () => {
-      const result = Parser(Person).to(data)
+      const result: any = Parser(Person).to(data)
       result.person3 = undefined
       expect(Array.isArray(result.person3)).toBeTruthy()
       expect(result.person3[0].name).toBe('22')

@@ -32,7 +32,7 @@ describe(`Parseus[type=number]`, () => {
   })
 
   describe(`readOnly`, () => {
-    const result = Parser(Person).to(data)
+    const result: any = Parser(Person).to(data)
     test('should convert to number and not allow mutation', () => {
       expect(typeof result.sibilings).toBe('number')
       result.sibilings = '22'

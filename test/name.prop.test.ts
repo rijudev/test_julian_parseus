@@ -20,7 +20,7 @@ class Person {
   deepArr?: Obj2[]
 }
 
-const data = {
+const data: any = {
   age2: '26',
   deep: { incoming: '33' },
   deepArr: [{ local2: '44' }]
@@ -34,20 +34,20 @@ describe(`Parseus[type=number, name=age]`, () => {
   })
 
   test('From:: should convert string number to number and read from age2 and use age2 as property', () => {
-    const result = Parser(Person).from(data)
+    const result: any = Parser(Person).from(data)
     expect(typeof result.age2).toBe('number')
     expect(result.age2).toBe(26)
   })
 
   test('From:: should convert deep object prop name', () => {
-    const result = Parser(Person).from(data)
+    const result: any = Parser(Person).from(data)
     const result2: any = Parser(Person).to(data)
     expect(result.deep.incoming).toBe(33)
     expect(result2.deep.local).toBe(33)
   })
 
   test('deepArr', () => {
-    const result = Parser(Person).from(data)
+    const result: any = Parser(Person).from(data)
     expect(result.deepArr[0].local2).toBe(44)
   })
 })

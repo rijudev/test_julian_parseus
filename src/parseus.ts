@@ -1,5 +1,5 @@
 import processor from './processor'
-import { IArgsProcess } from './helpers/interfaces'
+import { IArgsProcess, IModel } from './helpers/interfaces'
 import { getMetadataKeys, getMetadata } from './helpers/metadata'
 
 function process<T>(options: IArgsProcess<T>, isFrom = false): T {
@@ -11,16 +11,16 @@ function process<T>(options: IArgsProcess<T>, isFrom = false): T {
   }, target)
 }
 
-export default function parseus(model) {
+export default function parseus<T>(model: IModel<T>) {
   const target = new model()
   const keys = getMetadataKeys(target)
   const metadata = getMetadata(target)
   const options: any = { model, target, metadata, keys }
   return {
-    to<T>(ctx: T): T {
+    to(ctx): T {
       return process(Object.assign(options, { ctx }))
     },
-    from<T>(ctx: T): T {
+    from(ctx): T {
       return process(Object.assign(options, { ctx }), true)
     }
   }
