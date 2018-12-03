@@ -1,14 +1,14 @@
 import base from './base'
-import { runBeforeHook, runAfterHook } from '../../helpers/utils'
+import { matches, runBeforeHook, runAfterHook } from './utils'
 import { IParserOptions, IBaseParserReturn } from '../../helpers/interfaces'
 
+import ArrayParser from './array'
 import StringParser from './string'
 import NumberParser from './number'
 import ObjectParser from './object'
-import ArrayParser from './array'
 import UniqueParser from './unique'
-import CombinedParser from './combined'
 import DecimalType from './decimal'
+import CombinedParser from './combined'
 
 const Parsers = [
   StringParser,
@@ -21,16 +21,18 @@ const Parsers = [
 ]
 
 export default function parser(options: IParserOptions): IBaseParserReturn {
-  options = runBeforeHook(options)
+  let draft = options
+
+  draft = runBeforeHook(draft)
 
   for (let index = 0; index < Parsers.length; index++) {
     const Parser = Parsers[index]
-    if (Parser.matches(Parser.TYPE, options)) {
-      options = new Parser(options).run()
+    if (matches(Parser.TYPE, draft)) {
+      draft = Parser(draft)
     }
   }
 
-  options = runAfterHook(options)
+  draft = runAfterHook(draft)
 
-  return base(options)
+  return base(draft)
 }

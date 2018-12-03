@@ -1,7 +1,7 @@
 import Parser, { Field } from '../src'
 
 class Person {
-  @Field()
+  @Field({ type: 'string' })
   age?: string
 
   @Field({ readOnly: true })

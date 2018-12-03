@@ -1,27 +1,18 @@
-import { Parser } from './base'
+import { IParserOptions } from '../../helpers/interfaces'
 
-export default class Parse extends Parser {
-  static TYPE = 'combined'
+CombinedParser.TYPE = 'combined'
 
-  constructor(options) {
-    super(options)
-  }
+export default function CombinedParser(
+  options: IParserOptions
+): IParserOptions {
+  if (!options.combinedKeys) return options
 
-  run() {
-    const {
-      value: inValue,
-      combinedKeys,
-      combinedDelimiter,
-      ctx
-    } = this.options
+  const draft = Object.create(options)
 
-    const combined =
-      combinedKeys &&
-      combinedKeys.map(k => ctx[k]).join(combinedDelimiter || ',')
+  const { value: inValue, combinedKeys, combinedDelimiter, ctx } = options
 
-    const value = combined || inValue
-    this.options.value = value
+  const combined = combinedKeys.map(k => ctx[k]).join(combinedDelimiter || ',')
+  const value = combined || inValue
 
-    return this.options
-  }
+  return Object.assign(draft, { value })
 }

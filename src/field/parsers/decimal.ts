@@ -1,20 +1,14 @@
-import { Parser } from './base'
-import { hasDefinedValue } from '../../helpers/utils'
+import { IParserOptions } from '../../helpers/interfaces'
 
-export default class Parse extends Parser {
-  static TYPE = 'decimal'
+DecimalParser.TYPE = 'decimal'
 
-  constructor(options) {
-    super(options)
-  }
+export default function DecimalParser(options: IParserOptions): IParserOptions {
+  const draft = Object.create(options)
 
-  run() {
-    const { value: inValue, precision, fixed } = this.options
-    const parsed = hasDefinedValue(inValue) ? parseFloat(inValue) : inValue
+  const { value: inValue } = options
+  const value = parseFloat(parseFloat(inValue) as any).toFixed(
+    options.fixed || 5
+  )
 
-    const value = parsed && parseFloat(parsed).toFixed(fixed || 5)
-    this.options.value = value
-
-    return this.options
-  }
+  return Object.assign(draft, { value })
 }

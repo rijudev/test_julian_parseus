@@ -26,7 +26,6 @@ export interface IOptions {
   fixed?: number
   format?: string
   type?: FieldType
-  precision?: number
   maxLength?: number
   defaultValue?: any
   readOnly?: boolean

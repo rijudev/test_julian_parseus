@@ -1,16 +1,13 @@
-import { Parser } from './base'
-import { genUniqueId } from '../../helpers/utils'
+import { genUniqueId } from './utils'
+import { IParserOptions } from '../../helpers/interfaces'
 
-export default class Parse extends Parser {
-  static TYPE = 'unique'
+UniqueParser.TYPE = 'unique'
 
-  constructor(options) {
-    super(options)
-  }
+export default function UniqueParser(options: IParserOptions): IParserOptions {
+  const draft = Object.create(options)
 
-  run() {
-    const value = this.options.value || genUniqueId()
-    this.options.value = value
-    return this.options
-  }
+  const { value: inValue } = options
+  const value = inValue || genUniqueId()
+
+  return Object.assign(draft, { value })
 }

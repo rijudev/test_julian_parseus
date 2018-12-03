@@ -1,5 +1,4 @@
 import Parser, { Field } from '../src'
-import { unmatchType } from '../src/helpers/utils'
 
 class Eligibility {
   @Field({
@@ -74,30 +73,23 @@ const data = {
   }
 }
 
+const runWithTimeLog = (fn, message = '') => {
+  const startDate = new Date().getMilliseconds()
+  const result = fn()
+  const endDate = new Date().getMilliseconds()
+
+  console.log(`${message} ${endDate - startDate} ms`)
+  return result
+}
+
 describe(`Parseus[payload]`, () => {
   test('should work using to ', () => {
     const PatientParser = Parser(Patient)
 
-    let startDate = new Date().getMilliseconds()
-    const marshall = Parser(Patient).to(data)
-    let endDate = new Date().getMilliseconds()
-    console.log(`Object unmarshalled in ${endDate - startDate} ms`)
+    const marshall = runWithTimeLog(() => PatientParser.to(data))
+    const unmarshall = runWithTimeLog(() => PatientParser.from(data))
 
-    const nstart = new Date().getMilliseconds()
-    const unmarshall = Parser(Patient).to(data)
-    // const marshall = Parser(Patient).to(data)
-    const enddate = new Date().getMilliseconds()
-    console.log(`Object unmarshalled in ${enddate - nstart} ms`)
-
-    console.log(marshall)
-    console.log(unmarshall)
+    expect(marshall.patientNum).toBe('TEST01')
+    expect(unmarshall.patient_patient_num).toBe('TEST01')
   })
-
-  // test('should work using from ', () => {
-  //   let startDate = new Date().getMilliseconds()
-  //   const patient = Parser(Patient).from(data)
-  //   console.log(patient)
-  //   let endDate = new Date().getMilliseconds()
-  //   console.log(`Object unmarshalled in ${endDate - startDate} ms`)
-  // })
 })

@@ -21,6 +21,6 @@ export function setKeyMetadata(target, key: string, data) {
   const metadata = getMetadata(target)
   Reflect.defineProperty(target, METADATAKEY, {
     configurable: true,
-    value: { ...metadata, [key]: data }
+    value: Object.assign(metadata, { [key]: data })
   })
 }
