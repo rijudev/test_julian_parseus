@@ -1,0 +1,95 @@
+import Parser, { Field } from '../src'
+
+class Eligibility {
+  @Field({
+    isVirtual: true,
+    type: 'unique'
+  })
+  key: string
+
+  @Field({
+    name: 'patient_eligibility_list_group_id'
+  })
+  groupId: number
+}
+
+class Patient {
+  @Field({
+    isVirtual: true,
+    type: 'unique'
+  })
+  key: string
+
+  @Field({
+    name: 'patient_id'
+  })
+  id: number
+
+  @Field({
+    name: 'patient_patient_num'
+  })
+  patientNum: string
+
+  @Field({
+    name: 'patient_mod_start_date',
+    readOnly: true
+  })
+  modStartDate: string
+
+  @Field({
+    name: 'patient_patient_eligibility_list',
+    model: Eligibility
+  })
+  eligibilities: Eligibility[]
+
+  @Field({
+    name: 'patient_eligibility'
+  })
+  eligibility: Eligibility
+
+  @Field({
+    name: 'patient_decimal_value',
+    fixed: 3,
+    type: 'decimal'
+  })
+  decimalValue: number
+}
+
+const data = {
+  patient_id: '1',
+  patient_patient_num: 'TEST01',
+  patient_decimal_value: 0.1234123,
+  patient_mod_start_date: '2018-11-30T16:03:39.823571Z',
+  patient_patient_eligibility_list: [
+    {
+      patient_eligibility_list_group_id: 2
+    },
+    {
+      patient_eligibility_list_group_id: 2
+    }
+  ],
+  patient_eligibility: {
+    patient_eligibility_list_group_id: 1
+  }
+}
+
+const runWithTimeLog = (fn, message = '') => {
+  const startDate = new Date().getMilliseconds()
+  const result = fn()
+  const endDate = new Date().getMilliseconds()
+
+  console.log(`${message} ${endDate - startDate} ms`)
+  return result
+}
+
+describe(`Parseus[payload]`, () => {
+  test('should work using to ', () => {
+    const PatientParser = Parser(Patient)
+
+    const marshall = runWithTimeLog(() => PatientParser.to(data))
+    const unmarshall = runWithTimeLog(() => PatientParser.from(data))
+
+    expect(marshall.patientNum).toBe('TEST01')
+    expect(unmarshall.patient_patient_num).toBe('TEST01')
+  })
+})

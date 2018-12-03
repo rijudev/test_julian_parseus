@@ -1,48 +1,27 @@
-import processor from './helpers/processors'
-import { getMetaDataKey } from './helpers/utils'
+import processor from './processor'
+import { IArgsProcess } from './helpers/interfaces'
+import { getMetadataKeys, getMetadata } from './helpers/metadata'
 
-interface IOptions<T> {
-  model: any
-  ctx: T
-}
+function process<T>(options: IArgsProcess<T>, isFrom = false): T {
+  const { ctx, keys, metadata, target } = options
+  const getOptions = (acc, key) => ({ acc, key, keys, metadata, ctx, target })
 
-function process<T>(options: IOptions<T>): T {
-  const { model, ctx } = options
-  const metaKey = getMetaDataKey()
-  const meta = Reflect.get(new model(), metaKey)
-  const keys = Object.keys(meta)
-
-  if (Array.isArray(ctx)) {
-    return (ctx as any).map(item => parseus(item).to(model))
-  }
-
-  return keys.reduce(
-    (acc, key) => {
-      const entries = { ctx, meta }
-      const options = { acc, key, entries }
-      return processor(options)
-    },
-    {} as T
-  )
-}
-
-export class Parseus {
-  static to<T>(data: T) {
-    return parseus(this).to(data)
-  }
-
-  static from<T>(data: T) {
-    return parseus(this).from(data)
-  }
+  return keys.reduce((acc, key) => {
+    return processor(getOptions(acc, key), isFrom)
+  }, target)
 }
 
 export default function parseus(model) {
+  const target = new model()
+  const keys = getMetadataKeys(target)
+  const metadata = getMetadata(target)
+  const options: any = { model, target, metadata, keys }
   return {
     to<T>(ctx: T): T {
-      return process({ model, ctx })
+      return process(Object.assign(options, { ctx }))
     },
     from<T>(ctx: T): T {
-      return process({ model, ctx })
+      return process(Object.assign(options, { ctx }), true)
     }
   }
 }

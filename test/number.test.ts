@@ -1,49 +1,48 @@
-import Parser, { PNumber, Field, Parseus } from '../src'
+import Parser, { Field } from '../src'
 
-class Person extends Parseus {
-  @PNumber()
+class Person {
+  @Field()
   age?: number
 
-  @Field({ type: 'number' })
-  age2?: number
+  @Field({ readOnly: true })
+  sibilings?: number
 
-  @Field({ type: 'number', defaultValue: '44' })
-  age3?: number
+  @Field({ defaultValue: 23 })
+  default?: number
 }
 
-describe(`Parseus - TNumber / type: 'number' :: Extending Parseus`, () => {
-  const data = {
-    age: '25',
-    age2: '24',
-    age3: undefined
-  }
+const data = {
+  age: '26',
+  sibilings: '22',
+  default: undefined
+}
 
-  const result = Person.to(data)
-
+describe(`Parseus[type=number]`, () => {
   test('should convert string number to number', () => {
-    expect(result.age).toBe(25)
-    expect(result.age2).toBe(24)
+    const result = Parser(Person).to(data)
+    expect(typeof result.age).toBe('number')
+    expect(result.age).toBe(26)
   })
 
-  test('should asign default value and convert to number', () => {
-    expect(result.age3).toBe(44)
-  })
-})
-
-describe(`Parseus - TNumber / type: 'number' :: Direct usage`, () => {
-  const data = {
-    age: '25',
-    age2: '24',
-    age3: undefined
-  }
-
-  const result = Parser(Person).to(data)
-  test('should convert string number to number', () => {
-    expect(result.age).toBe(25)
-    expect(result.age2).toBe(24)
+  describe(`defaultValue`, () => {
+    const result = Parser(Person).to(data)
+    test('should set default value', () => {
+      expect(result.default).toBe(23)
+    })
   })
 
-  test('should asign default value and convert to number', () => {
-    expect(result.age3).toBe(44)
+  describe(`readOnly`, () => {
+    const result = Parser(Person).to(data)
+    test('should convert to number and not allow mutation', () => {
+      expect(typeof result.sibilings).toBe('number')
+      result.sibilings = '22'
+      expect(typeof result.sibilings).toBe('number')
+      expect(result.sibilings).toBe(22)
+    })
+
+    test('should allow mutation in not readOnly fields', () => {
+      result.age = '2'
+      expect(typeof result.age).not.toBe('number')
+    })
   })
 })

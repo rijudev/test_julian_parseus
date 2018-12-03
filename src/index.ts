@@ -1,6 +1,4 @@
-export { default, Parseus } from './parseus'
-export { Field } from './fields/field'
-export { PNumber } from './fields/PNumber'
-export { PString } from './fields/PString'
-export { PObject } from './fields/PObject'
-export { PArray } from './fields/PArray'
+import 'reflect-metadata'
+
+export { default } from './parseus'
+export { default as Field } from './field'

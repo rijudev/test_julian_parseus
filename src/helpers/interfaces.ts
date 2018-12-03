@@ -1,36 +1,68 @@
-export type Type = 'string' | 'number' | 'custom' | 'object' | 'array'
+export type FieldType =
+  | 'string'
+  | 'number'
+  | 'object'
+  | 'array'
+  | 'unique'
+  | 'decimal'
+  | 'combined'
 
-export interface IClass {
-  new (): void
+export interface IModel<T> {
+  new (): T
 }
-export interface IBaseOptions {
+
+export interface IMetadata {
+  [key: string]: IOptions
+}
+
+export interface IParserHook {
+  from?(options: IParserOptions): any
+  to?(options: IParserOptions): any
+}
+
+export interface IOptions {
   model?: any
   name?: string
+  fixed?: number
   format?: string
-  parser?: IParser
+  type?: FieldType
   maxLength?: number
   defaultValue?: any
-}
-export interface IOptions extends IBaseOptions {
-  type: Type
+  readOnly?: boolean
+  isVirtual?: boolean
+  combinedKeys?: string[]
+  afterHook?: IParserHook
+  beforeHook?: IParserHook
+  combinedDelimiter?: string
 }
 
-export interface IParserOptions extends IBaseOptions {
+export interface IParserOptions extends IOptions {
   value?: any
-  defaultValue?: any
+  ctx: any
+  key: string
+  target: any
+  isFrom?: any
 }
 
-export interface IParser {
-  (options: IParserOptions): any
+export interface IBaseParserReturn extends IParserOptions {
+  targetKey: any
 }
-export interface IEntriesProcessor<T> {
-  meta: { [key: string]: IOptions }
-  ctx: T
-}
+
 export interface IArgsProcessor<T> {
+  ctx: T
   acc: T
   key: string
-  entries: IEntriesProcessor<T>
+  target: T
+  keys: string[]
+  metadata: { [key: string]: any }
+}
+
+export interface IArgsProcess<T> {
+  model: IModel<T>
+  target: T
+  ctx: T
+  metadata: { [key: string]: any }
+  keys: string[]
 }
 
 export type Processed<T> = T
